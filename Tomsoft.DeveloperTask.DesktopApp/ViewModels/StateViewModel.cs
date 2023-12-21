@@ -52,13 +52,16 @@ public class StateViewModel : ViewModelBase, IDisposable
         var credentialsPage = FindPage<CredentialsPageViewModel>();
         _page = credentialsPage;
         
+        var credentials = new LuceedApiCredentials();
         Task.Run(async () =>
         {
-            var credentials = new LuceedApiCredentials();
             await credentials.Load();
 
             var canConnect = await CredentialsPageViewModel.TestCredentials(credentials);
 
+            return canConnect;
+        }).ContinueWith(task =>
+        {
             if (credentials.Username is not null)
             {
                 credentialsPage.Username = credentials.Username;
@@ -68,12 +71,8 @@ public class StateViewModel : ViewModelBase, IDisposable
             {
                 credentialsPage.Password = credentials.Password;
             }
-
-            return canConnect;
-        }).ContinueWith(task =>
-        {
-            var canConnect = task.Result;
-            if (canConnect)
+            
+            if (task.Result)
             {
                 ChangePage(Models.Page.Articles);
             }
