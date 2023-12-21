@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Tomsoft.DeveloperTask.DesktopApp.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:warehouses="clr-namespace:Tomsoft.DeveloperTask.Data.Models.Warehouses;assembly=Tomsoft.DeveloperTask.Data"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Tomsoft.DeveloperTask.DesktopApp.Views.Pages.WarehousesPageView">
+
+    <Design.DataContext>
+        <vm:WarehousesPageViewModel />
+    </Design.DataContext>
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center"
+          RowDefinitions="Auto, 10, Auto"
+          Width="1200">
+        <TextBlock Grid.Row="0" FontSize="32" HorizontalAlignment="Center">Warehouses</TextBlock>
+
+        <DataGrid Grid.Row="2" IsVisible="{Binding AnyWarehousesPresent}"
+                  x:DataType="vm:WarehousesPageViewModel" ItemsSource="{Binding Warehouses}"
+                  IsReadOnly="True"
+                  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Business Unit" Binding="{Binding BusinessUnitName}" />
+                <DataGridTextColumn Header="Warehouse" Binding="{Binding TheWarehouse}" />
+                <DataGridTemplateColumn Header="Actions">
+                    <DataTemplate>
+                        <Border Padding="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Button
+                                    Command="{Binding $parent[UserControl].((vm:WarehousesPageViewModel)DataContext).ViewTurnoverCalculationsForArticlesCommand}"
+                                    x:DataType="warehouses:Warehouse"
+                                    CommandParameter="{Binding}">
+                                    View Turnover by Articles
+                                </Button>
+
+                                <Button
+                                    Margin="10 0 0 0"
+                                    Command="{Binding $parent[UserControl].((vm:WarehousesPageViewModel)DataContext).ViewTurnoverCalculationsForPaymentsCommand}"
+                                    x:DataType="warehouses:Warehouse"
+                                    CommandParameter="{Binding}">
+                                    View Turnover by Payments
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="2" HorizontalAlignment="Center" FontSize="24"
+                   x:DataType="vm:WarehousesPageViewModel" IsVisible="{Binding !AnyWarehousesPresent}">
+            No Warehouses
+        </TextBlock>
+    </Grid>
+
+</UserControl>

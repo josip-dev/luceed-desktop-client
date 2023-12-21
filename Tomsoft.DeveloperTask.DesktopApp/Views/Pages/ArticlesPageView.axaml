@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Tomsoft.DeveloperTask.DesktopApp.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Tomsoft.DeveloperTask.DesktopApp.Views.Pages.ArticlesPageView">
+
+    <Design.DataContext>
+        <vm:ArticlesPageViewModel />
+    </Design.DataContext>
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center"
+          RowDefinitions="Auto, 10, Auto, 5, Auto, 10, Auto, 25, Auto"
+          Width="800">
+        <TextBlock Grid.Row="0" FontSize="32" HorizontalAlignment="Center">Articles</TextBlock>
+
+        <Grid Grid.Row="2" ColumnDefinitions="Auto, *, Auto">
+            <TextBlock Grid.Column="0" VerticalAlignment="Center">Name Part</TextBlock>
+            <Button Grid.Column="2" VerticalAlignment="Center" x:DataType="vm:ArticlesPageViewModel"
+                    Command="{Binding ClearNamePartCommand}">
+                Clear
+            </Button>
+        </Grid>
+        <TextBox Grid.Row="4" Watermark="Article Name Part" x:DataType="vm:ArticlesPageViewModel"
+                 Text="{Binding ArticleNamePart}" />
+
+        <Button Grid.Row="6"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center" x:DataType="vm:ArticlesPageViewModel"
+                Command="{Binding SearchArticlesCommand}">
+            Search Articles
+        </Button>
+
+        <DataGrid Grid.Row="8" IsVisible="{Binding AnyArticlesPresent}"
+                  x:DataType="vm:ArticlesPageViewModel" ItemsSource="{Binding Articles}"
+                  AutoGenerateColumns="True" IsReadOnly="True"
+                  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray"
+                  MinHeight="300">
+        </DataGrid>
+        <TextBlock Grid.Row="8" HorizontalAlignment="Center" FontSize="24"
+                   x:DataType="vm:ArticlesPageViewModel" IsVisible="{Binding !AnyArticlesPresent}">
+            No Articles
+        </TextBlock>
+    </Grid>
+
+</UserControl>

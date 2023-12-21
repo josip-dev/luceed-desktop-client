@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Tomsoft.DeveloperTask.DesktopApp.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Tomsoft.DeveloperTask.DesktopApp.Views.Pages.TurnoverCalculationsPageView">
+
+    <Design.DataContext>
+        <vm:TurnoverCalculationsPageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, 30, Auto, 30, Auto, 15, Auto">
+        <StackPanel Grid.Row="0">
+            <TextBlock>
+                <Run FontSize="32">Turnover Calculations</Run>
+                <Run FontSize="16">(</Run>
+                <Run FontSize="16" x:DataType="vm:TurnoverCalculationsPageViewModel" Text="{Binding Type}" />
+                <Run FontSize="16">)</Run>
+            </TextBlock>
+            <TextBlock FontSize="20"
+                       x:DataType="vm:TurnoverCalculationsPageViewModel" Text="{Binding Warehouse}" />
+        </StackPanel>
+
+        <Grid Grid.Row="2" RowDefinitions="Auto, 5, Auto, 10, Auto" ColumnDefinitions="Auto, 10, Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0">From</TextBlock>
+            <DatePicker Grid.Row="2" Grid.Column="0" x:DataType="vm:TurnoverCalculationsPageViewModel"
+                        SelectedDate="{Binding LookupStartDate}">
+            </DatePicker>
+            <TextBlock Grid.Row="0" Grid.Column="2">To:</TextBlock>
+            <DatePicker Grid.Row="2" Grid.Column="2" x:DataType="vm:TurnoverCalculationsPageViewModel"
+                        SelectedDate="{Binding LookupEndDate}">
+            </DatePicker>
+        </Grid>
+
+        <Grid Grid.Row="4" x:DataType="vm:TurnoverCalculationsPageViewModel" IsVisible="{Binding ShowForArticles}"
+              Margin="5">
+            <DataGrid IsVisible="{Binding AnyTurnoverCalculationsPresentForArticles}"
+                      VerticalScrollBarVisibility="Hidden"
+                      x:DataType="vm:TurnoverCalculationsPageViewModel"
+                      ItemsSource="{Binding TurnoverCalculationsByArticle}"
+                      IsReadOnly="True" MinHeight="300"
+                      GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Article}" />
+                    <DataGridTextColumn Header="Cost" Binding="{Binding Amount}" />
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" />
+                    <DataGridTextColumn Header="Service" Binding="{Binding Service}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock HorizontalAlignment="Center" FontSize="24"
+                       x:DataType="vm:TurnoverCalculationsPageViewModel"
+                       IsVisible="{Binding !AnyTurnoverCalculationsPresentForArticles}">
+                No Turnover Calculations
+            </TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="4" x:DataType="vm:TurnoverCalculationsPageViewModel" IsVisible="{Binding ShowForPayments}">
+            <DataGrid IsVisible="{Binding AnyTurnoverCalculationsPresentForPayments}"
+                      VerticalScrollBarVisibility="Hidden"
+                      x:DataType="vm:TurnoverCalculationsPageViewModel" ItemsSource="{Binding TurnoverCalculations}"
+                      AutoGenerateColumns="True" IsReadOnly="True" MinHeight="300"
+                      GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+            </DataGrid>
+            <TextBlock HorizontalAlignment="Center" FontSize="24"
+                       x:DataType="vm:TurnoverCalculationsPageViewModel"
+                       IsVisible="{Binding !AnyTurnoverCalculationsPresentForPayments}">
+                No Turnover Calculations
+            </TextBlock>
+        </Grid>
+
+        <Button Grid.Row="6"
+                FontSize="20"
+                HorizontalAlignment="Center"
+                x:DataType="vm:TurnoverCalculationsPageViewModel"
+                IsVisible="{Binding ShowClearFiltersButton}"
+                Command="{Binding ClearFiltersCommand}">
+            Clear Filters
+        </Button>
+    </Grid>
+
+</UserControl>
